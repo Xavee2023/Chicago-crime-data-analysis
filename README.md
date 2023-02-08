@@ -1,1 +1,1 @@
-# Chicago-crime-data-analysis
+This project is an analysis of crime data in Chicago using SQL and BigQuery. The data is analyzed using various SQL techniques such as data filtering, grouping, and aggregating to uncover patterns and trends in crime.
