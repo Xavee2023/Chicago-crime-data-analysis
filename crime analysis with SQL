@@ -1,0 +1,84 @@
+--- what are the different types of crime in the dataset. 
+
+SELECT DISTINCT(primary_type) AS crime_types
+FROM `vaulted-program-374501.chi_crime.crime_analysis`;
+
+--- The above query revealed that there 36 different crimes in the dataset.
+
+--- Our query also revealed that the dataset contained both 'Criminal Sexual Assault' and 'Crim Sexual Assault' crimes 
+--- which were essentially the same, and for the sake of consistency and clarity, I merged both into one. 
+UPDATE `vaulted-program-374501.chi_crime.crime_analysis`
+SET primary_type = 'CRIMINAL SEXUAL ASSAULT'
+WHERE primary_type = 'CRIM SEXUAL ASSAULT';
+
+--- How many different districts are in the dataset
+
+SELECT DISTINCT(district)
+FROM `vaulted-program-374501.chi_crime.crime_analysis`
+WHERE district IS NOT NULL
+ORDER BY district DESC;
+ 
+---  The query above revealed that there were 24 different districts.
+
+---Which police district had the highest number of crimes, and which had the lowest.
+
+SELECT district, COUNT(district) AS crime_count
+FROM `vaulted-program-374501.chi_crime.crime_analysis`
+GROUP BY district 
+ORDER BY crime_count DESC;
+
+--- The query above revealed that the 8th district had the highest number of crime incidents with a total of 519,281 crimes --- recorded in the district. On the other hand, district 21 had the lowest recorded incidents of crimes with just a total --- of 4 crimes.
+
+--- What crime has the highest rate in the district with the most crime incidents (district 8)
+
+SELECT primary_type, COUNT(primary_type) AS number_of_occurence
+FROM `vaulted-program-374501.chi_crime.crime_analysis`
+WHERE district = 8
+GROUP BY primary_type
+ORDER BY number_of_occurence DESC;
+
+--- The query above revealed that theft had the highest crime rate with a total of 101,432 incidents.
+
+--- In what year was this particular crime the highest in the district, and what year was it lowest.
+SELECT year, COUNT(primary_type) AS incident_count
+FROM `vaulted-program-374501.chi_crime.crime_analysis`
+WHERE district = 8
+AND primary_type = 'THEFT'
+GROUP BY year
+ORDER BY incident_count DESC;
+
+--- Theft occurence was highest in 2001 with 6660 incident counts. Also, it can be observed from the results that theft -- --- crimes has been on a steady decline each year since 2001.
+
+--- Where are the top 3 places theft crimes are occuring mostly in this district
+
+SELECT location_description, COUNT(location_description) AS theft_incident_count
+FROM `vaulted-program-374501.chi_crime.crime_analysis`
+WHERE district = 8
+AND primary_type = 'THEFT'
+GROUP BY location_description
+ORDER BY theft_incident_count DESC
+LIMIT 3;
+
+---- Thefts are mostly occurring on the Streets, Residences and at departmental stores.
+
+
+--- What are the arrests numbers for theft crimes in this district
+
+SELECT arrest, COUNT(arrest) AS arrested
+FROM `vaulted-program-374501.chi_crime.crime_analysis`
+WHERE district = 8
+AND primary_type = 'THEFT'
+GROUP BY  arrest
+ORDER BY arrested DESC;
+
+-- The query above showed that only 13,086 cases were made in theft cases in this district, while in 88,346 other theft --cases, no arrests were made.
+
+-- Trend analysis of crime figures through the years
+
+SELECT DISTINCT(year), COUNT(primary_type) AS crime_total,
+FROM `vaulted-program-374501.chi_crime.crime_analysis`
+GROUP BY year
+ORDER BY crime_total DESC;
+
+--- Crime numbers has dropped significantly in the last 10 years, compared to the early 2000s
+
